@@ -1,7 +1,7 @@
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useNavigation } from 'expo-router';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
@@ -11,6 +11,7 @@ export default function EclockScreen() {
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState('');
+  const [history, setHistory] = useState([]);
 
   const navigation = useNavigation();
 
@@ -45,55 +46,87 @@ export default function EclockScreen() {
     });
   }, [navigation]);
 
+  const handleClockIn = async () => {
+    if (!token.trim()) {
+      setResult('请输入有效的token');
+      return;
+    }
+
+    setIsLoading(true);
+    setResult(''); // Clear previous result
+
+    const { success, data, error } = await fetchClockIn(token);
+
+    if (success) {
+      const newResult = `打卡成功: ${JSON.stringify(data)}`;
+      setResult(newResult);
+      // 添加到历史记录
+      setHistory(prev => [{ time: new Date().toLocaleString(), result: newResult }, ...prev.slice(0, 4)]);
+    } else {
+      const errorMsg = `打卡失败: ${error || '未知错误'}`;
+      setResult(errorMsg);
+      // 添加到历史记录
+      setHistory(prev => [{ time: new Date().toLocaleString(), result: errorMsg }, ...prev.slice(0, 4)]);
+    }
+
+    setIsLoading(false);
+  };
+
   return (
-    <View className="flex-1 items-center justify-center gap-8 p-4">
-      <Card>
+    <ScrollView className="flex-1 bg-background p-4">
+      <Card className="mb-4 border border-border bg-card shadow-sm">
+        <CardHeader>
+          <CardTitle>鹅打卡</CardTitle>
+          <CardDescription>请输入您的token进行打卡操作</CardDescription>
+        </CardHeader>
         <CardContent className="gap-6">
-          <View className="gap-3">
-            <Text>填写token</Text>
-          </View>
-          <View className="gap-3">
-            <Input
-              placeholder="token"
-              value={token}
-              onChangeText={setToken}
-            />
-          </View>
-          <View className="gap-3">
+          <View className="gap-4">
+            <View>
+              <Text className="mb-2 text-foreground">填写token</Text>
+              <Input
+                placeholder="请输入token"
+                value={token}
+                onChangeText={setToken}
+                className="h-12"
+              />
+            </View>
+            
             <Button
-              variant="outline"
+              className="h-12"
               disabled={isLoading}
-              onPress={async () => {
-                if (!token.trim()) {
-                  setResult('请输入有效的token');
-                  return;
-                }
-
-                setIsLoading(true);
-                setResult(''); // Clear previous result
-
-                const { success, data, error } = await fetchClockIn(token);
-
-                if (success) {
-                  setResult(`打卡成功: ${JSON.stringify(data)}`);
-                } else {
-                  setResult(`打卡失败: ${error || '未知错误'}`);
-                }
-
-                setIsLoading(false);
-              }}
+              onPress={handleClockIn}
             >
               {isLoading ? '提交中...' : '提交打卡'}
             </Button>
-          </View>
-          <View className="gap-3">
-            <Text>打卡结果</Text>
-          </View>
-          <View className="gap-3">
-            <Text className="text-sm text-gray-600">{result}</Text>
+            
+            <View>
+              <Text className="mb-2 text-foreground font-medium">打卡结果</Text>
+              <View className="p-3 rounded-md bg-muted min-h-[60px]">
+                <Text className="text-sm text-foreground">{result || '暂无结果'}</Text>
+              </View>
+            </View>
           </View>
         </CardContent>
       </Card>
-    </View>
+      
+      <Card className="border border-border bg-card shadow-sm">
+        <CardHeader>
+          <CardTitle>打卡历史</CardTitle>
+          <CardDescription>最近的打卡记录</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {history.length > 0 ? (
+            history.map((item, index) => (
+              <View key={index} className="mb-3 p-3 rounded-md bg-muted">
+                <Text className="text-xs text-muted-foreground mb-1">{item.time}</Text>
+                <Text className="text-sm text-foreground">{item.result}</Text>
+              </View>
+            ))
+          ) : (
+            <Text className="text-muted-foreground text-center py-4">暂无打卡历史</Text>
+          )}
+        </CardContent>
+      </Card>
+    </ScrollView>
   );
 }
