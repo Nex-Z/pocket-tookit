@@ -50,6 +50,9 @@ module.exports = {
       borderWidth: {
         hairline: hairlineWidth(),
       },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       keyframes: {
         'accordion-down': {
           from: { height: '0' },

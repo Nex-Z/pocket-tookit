@@ -4,88 +4,90 @@
 
 @layer base {
   :root {
-    /* iOS Light Mode Colors (System Colors) */
+    /* Light Mode - Immersive Reading Experience Design System */
+    /* Primary: #137fec, Font: Inter, Roundness: 8px, Saturation: High */
     
     /* Backgrounds */
-    --background: 240 5% 96%; /* #F2F2F7 Grouped Background */
-    --foreground: 0 0% 0%; /* Label */
+    --background: 220 14% 96%; /* #F0F2F5 */
+    --foreground: 220 20% 10%; /* Dark text */
     
-    --card: 0 0% 100%; /* #FFFFFF Secondary Grouped Background */
-    --card-foreground: 0 0% 0%;
+    --card: 0 0% 100%; /* White card */
+    --card-foreground: 220 20% 10%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
+    --popover-foreground: 220 20% 10%;
     
-    /* Primary Colors */
-    --primary: 211 100% 50%; /* #007AFF System Blue */
+    /* Primary Colors - #137fec */
+    --primary: 211 89% 50%; /* #137fec */
     --primary-foreground: 0 0% 100%;
     
     /* Secondary & Muted */
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 5% 38%; /* #3C3C43 60% Label Secondary */
+    --secondary: 220 14% 93%;
+    --secondary-foreground: 220 10% 40%;
     
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 5% 38%; /* #3C3C43 60% Label Secondary */
+    --muted: 220 14% 93%;
+    --muted-foreground: 220 10% 46%;
     
     /* Interactive States */
-    --accent: 240 5% 90%; /* #E5E5EA System Fill / Table Cell Selection */
-    --accent-foreground: 0 0% 0%;
+    --accent: 211 89% 95%; /* Light blue accent */
+    --accent-foreground: 211 89% 35%;
     
-    --destructive: 0 100% 50%; /* #FF3B30 System Red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
+    /* Success & Warning */
+    --success: 152 69% 45%;
+    --warning: 38 92% 50%;
+    
     /* Borders & Inputs */
-    /* Using HSL values that map to rgba(60, 60, 67, 0.29) approx */
-    /* Since Tailwind HSL variables are applied as `hsl(var(--border))`, we need solid colors or hack it. */
-    /* NativeWind supports opacity modifiers, so we'll use a solid color base that is lighter. */
-    /* Actually, better to use the exact opaque equivalents if we can't do alpha easily in vars. */
-    /* #C6C6C8 is the standard opaque separator. */
-    /* Let's try making it slightly lighter/more subtle: #E5E5EA (same as accent) is often too light for separator. */
-    /* Standard is #C6C6C8. Let's stick to it but rely on hairlineWidth in components. */
-    --border: 240 1% 78%; /* #C6C6C8 */
-    --input: 240 1% 78%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
     
-    --ring: 211 100% 50%;
+    --ring: 211 89% 50%;
     
-    --radius: 0.625rem; /* 10px Standard Corner Radius */
+    --radius: 0.5rem; /* 8px */
   }
 
   .dark:root {
-    /* iOS Dark Mode Colors (System Colors) */
+    /* Dark Mode - Immersive Dark Theme */
     
     /* Backgrounds */
-    --background: 0 0% 0%; /* #000000 Grouped Background */
-    --foreground: 0 0% 100%; /* Label */
+    --background: 225 15% 8%; /* #111318 Deep dark */
+    --foreground: 210 20% 95%; /* #EDF1F5 */
     
-    --card: 240 4% 11%; /* #1C1C1E Secondary Grouped Background */
-    --card-foreground: 0 0% 100%;
+    --card: 225 14% 12%; /* #181B22 */
+    --card-foreground: 210 20% 95%;
     
-    --popover: 240 4% 11%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 225 14% 14%;
+    --popover-foreground: 210 20% 95%;
     
-    /* Primary Colors */
-    --primary: 211 100% 50%; /* #0A84FF Dark Mode Blue */
+    /* Primary Colors - #137fec (brighter in dark mode) */
+    --primary: 211 89% 55%; /* #2E90F0 slightly brighter */
     --primary-foreground: 0 0% 100%;
     
     /* Secondary & Muted */
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 240 4% 60%; /* #EBEBF5 60% Label Secondary */
+    --secondary: 225 14% 16%;
+    --secondary-foreground: 220 10% 65%;
     
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 4% 60%; /* #EBEBF5 60% Label Secondary */
+    --muted: 225 14% 16%;
+    --muted-foreground: 220 10% 55%;
     
     /* Interactive States */
-    --accent: 240 2% 23%; /* #3A3A3C System Fill / Table Cell Selection */
-    --accent-foreground: 0 0% 100%;
+    --accent: 225 14% 18%;
+    --accent-foreground: 210 20% 95%;
     
-    --destructive: 0 100% 45%; /* #FF453A System Red Dark */
+    --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders & Inputs */
-    --border: 240 2% 22%; /* #38383A Opaque Separator */
-    --input: 240 2% 22%;
+    /* Success & Warning */
+    --success: 152 69% 50%;
+    --warning: 38 92% 55%;
     
-    --ring: 211 100% 50%;
+    /* Borders & Inputs */
+    --border: 225 12% 18%; /* Subtle border */
+    --input: 225 12% 18%;
+    
+    --ring: 211 89% 55%;
   }
 }
 

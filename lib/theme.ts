@@ -2,48 +2,48 @@ import { DarkTheme, DefaultTheme, type Theme } from '@react-navigation/native';
  
 export const THEME = {
   light: {
-    background: 'hsl(240 5% 96%)', // #F2F2F7
-    foreground: 'hsl(0 0% 0%)',
+    background: 'hsl(220 14% 96%)',
+    foreground: 'hsl(220 20% 10%)',
     card: 'hsl(0 0% 100%)',
-    cardForeground: 'hsl(0 0% 0%)',
+    cardForeground: 'hsl(220 20% 10%)',
     popover: 'hsl(0 0% 100%)',
-    popoverForeground: 'hsl(0 0% 0%)',
-    primary: 'hsl(211 100% 50%)', // #007AFF
+    popoverForeground: 'hsl(220 20% 10%)',
+    primary: 'hsl(211 89% 50%)', // #137fec
     primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(240 5% 96%)',
-    secondaryForeground: 'hsl(240 5% 38%)', // #3C3C43 60%
-    muted: 'hsl(240 5% 96%)',
-    mutedForeground: 'hsl(240 5% 38%)', // #3C3C43 60%
-    accent: 'hsl(240 5% 90%)', // #E5E5EA
-    accentForeground: 'hsl(0 0% 0%)',
-    destructive: 'hsl(0 100% 50%)', // #FF3B30
+    secondary: 'hsl(220 14% 93%)',
+    secondaryForeground: 'hsl(220 10% 40%)',
+    muted: 'hsl(220 14% 93%)',
+    mutedForeground: 'hsl(220 10% 46%)',
+    accent: 'hsl(211 89% 95%)',
+    accentForeground: 'hsl(211 89% 35%)',
+    destructive: 'hsl(0 84% 60%)',
     destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(240 1% 78%)', // #C6C6C8
-    input: 'hsl(240 1% 78%)',
-    ring: 'hsl(211 100% 50%)',
-    radius: '0.625rem',
+    border: 'hsl(220 13% 88%)',
+    input: 'hsl(220 13% 88%)',
+    ring: 'hsl(211 89% 50%)',
+    radius: '0.5rem',
   },
   dark: {
-    background: 'hsl(0 0% 0%)',
-    foreground: 'hsl(0 0% 100%)',
-    card: 'hsl(240 4% 11%)', // #1C1C1E
-    cardForeground: 'hsl(0 0% 100%)',
-    popover: 'hsl(240 4% 11%)',
-    popoverForeground: 'hsl(0 0% 100%)',
-    primary: 'hsl(211 100% 50%)', // #0A84FF
+    background: 'hsl(225 15% 8%)', // #111318
+    foreground: 'hsl(210 20% 95%)', // #EDF1F5
+    card: 'hsl(225 14% 12%)', // #181B22
+    cardForeground: 'hsl(210 20% 95%)',
+    popover: 'hsl(225 14% 14%)',
+    popoverForeground: 'hsl(210 20% 95%)',
+    primary: 'hsl(211 89% 55%)', // #2E90F0
     primaryForeground: 'hsl(0 0% 100%)',
-    secondary: 'hsl(240 4% 16%)',
-    secondaryForeground: 'hsl(240 4% 60%)', // #EBEBF5 60%
-    muted: 'hsl(240 4% 16%)',
-    mutedForeground: 'hsl(240 4% 60%)', // #EBEBF5 60%
-    accent: 'hsl(240 2% 23%)', // #3A3A3C
-    accentForeground: 'hsl(0 0% 100%)',
-    destructive: 'hsl(0 100% 45%)', // #FF453A
+    secondary: 'hsl(225 14% 16%)',
+    secondaryForeground: 'hsl(220 10% 65%)',
+    muted: 'hsl(225 14% 16%)',
+    mutedForeground: 'hsl(220 10% 55%)',
+    accent: 'hsl(225 14% 18%)',
+    accentForeground: 'hsl(210 20% 95%)',
+    destructive: 'hsl(0 84% 55%)',
     destructiveForeground: 'hsl(0 0% 100%)',
-    border: 'hsl(240 2% 22%)', // #38383A
-    input: 'hsl(240 2% 22%)',
-    ring: 'hsl(211 100% 50%)',
-    radius: '0.625rem',
+    border: 'hsl(225 12% 18%)',
+    input: 'hsl(225 12% 18%)',
+    ring: 'hsl(211 89% 55%)',
+    radius: '0.5rem',
   },
 };
  
