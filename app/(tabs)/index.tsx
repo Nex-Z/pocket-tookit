@@ -44,7 +44,7 @@ const recentTools = [
     id: 'todo',
     title: '每日快讯',
     label: '',
-    pageUrl: '/tools/todo',
+    pageUrl: '/tools/news',
     icon: Zap,
     gradient: ['#F59E0B', '#D97706'],
   },
