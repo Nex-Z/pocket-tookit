@@ -3,6 +3,7 @@ import { ScrollView, View, Pressable, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Search, ChevronRight } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
@@ -12,6 +13,7 @@ import { TOOL_CATALOG, TOOL_CATEGORIES } from '@/lib/tool-catalog';
 export default function ExploreScreen() {
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -39,7 +41,7 @@ export default function ExploreScreen() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 100 }}
     >
-      <View className="px-5 pt-16 pb-1">
+      <View className="px-5 pb-1" style={{ paddingTop: insets.top + 12 }}>
         <Text className="text-[32px] font-bold text-foreground tracking-tight leading-10">工具箱</Text>
       </View>
 

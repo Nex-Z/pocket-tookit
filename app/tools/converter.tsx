@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, View, Pressable, TextInput } from 'react-native';
 import { useNavigation } from 'expo-router';
-import { ArrowRightLeft, Ruler, Weight, Thermometer } from 'lucide-react-native';
+import { Ruler, Weight, Thermometer } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 
 import { Text } from '@/components/ui/text';
@@ -120,29 +120,7 @@ export default function ConverterScreen() {
   }, [category, inputValue, fromUnit, toUnit]);
 
   return (
-    <ScrollView className="flex-1 bg-background" showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 20, paddingBottom: 100 }}>
-      <View
-        className="rounded-[16px] p-6 mb-5"
-        style={{
-          backgroundColor: '#14B8A6',
-          shadowColor: '#14B8A6',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.22,
-          shadowRadius: 16,
-          elevation: 8,
-        }}
-      >
-        <View className="flex-row items-center gap-3">
-          <View className="w-12 h-12 rounded-[10px] bg-white/20 items-center justify-center">
-            <Icon as={ArrowRightLeft} className="text-white" size={24} strokeWidth={2.2} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-white font-bold text-[22px]">单位转换</Text>
-            <Text className="text-white/80 text-[13px] mt-1">支持长度、重量、温度即时换算</Text>
-          </View>
-        </View>
-      </View>
-
+    <ScrollView className="flex-1 bg-background" showsVerticalScrollIndicator={false} contentContainerStyle={{ padding: 16, paddingBottom: 96 }}>
       <View className="gap-4">
         <View
           className="rounded-[14px] p-5 gap-4"

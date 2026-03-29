@@ -85,38 +85,8 @@ export default function DmpScreen() {
     <ScrollView 
       className="flex-1 bg-background"
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 96 }}
     >
-      {/* 顶部体验横幅 (深紫色主题) */}
-      <View 
-        className="rounded-[16px] overflow-hidden mb-6"
-        style={{
-          shadowColor: '#7C3AED',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.25,
-          shadowRadius: 16,
-          elevation: 8,
-        }}
-      >
-        <View className="p-6" style={{ backgroundColor: '#7C3AED' }}>
-          {/* Decorative Elements */}
-          <View className="absolute top-[-40px] right-[-30px] w-[140px] h-[140px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }} />
-          <View className="absolute bottom-[-20px] left-[15%] w-[80px] h-[80px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          
-          <View className="relative z-10 flex-row items-center gap-4">
-            <View className="w-14 h-14 rounded-[12px] bg-white/20 items-center justify-center">
-              <Icon as={Database} className="text-white" size={28} strokeWidth={2} />
-            </View>
-            <View className="flex-1">
-              <Text className="text-white font-bold text-[22px] mb-1">DMP打卡</Text>
-              <Text className="text-white/80 text-[13px] leading-relaxed">
-                数据管理平台专用。请填入秘钥区分上班与下班打卡。
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
       <View className="gap-5">
         <Text className="text-[13px] font-semibold text-muted-foreground uppercase tracking-widest pl-1">
           打卡管控

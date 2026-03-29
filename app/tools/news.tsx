@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigation } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
-import { Zap, TrendingUp, Flame, RefreshCw, Clock, Search, ExternalLink } from 'lucide-react-native';
+import { TrendingUp, Flame, RefreshCw, Clock, Search, ExternalLink } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { recordToolOpen } from '@/lib/usage';
 
@@ -390,36 +390,9 @@ export default function NewsScreen() {
     <ScrollView
       className="flex-1 bg-background"
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 96 }}
       refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} tintColor="#137fec" />}
     >
-      <View
-        className="rounded-[16px] overflow-hidden mb-6"
-        style={{
-          shadowColor: '#F59E0B',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.2,
-          shadowRadius: 16,
-          elevation: 8,
-        }}
-      >
-        <View className="p-6" style={{ backgroundColor: '#F59E0B' }}>
-          <View className="absolute top-[-40px] right-[-20px] w-[130px] h-[130px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          <View className="absolute bottom-[-30px] left-[20%] w-[100px] h-[100px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
-          <View className="absolute top-[10px] left-[-10px] w-[60px] h-[60px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.04)' }} />
-
-          <View className="relative z-10 flex-row items-center gap-4">
-            <View className="w-14 h-14 rounded-[12px] bg-white/20 items-center justify-center">
-              <Icon as={Zap} className="text-white" size={28} strokeWidth={2} />
-            </View>
-            <View className="flex-1">
-              <Text className="text-white font-bold text-[22px] mb-1">微博热搜</Text>
-              <Text className="text-white/80 text-[13px] leading-relaxed">实时热点快讯，每日热门话题一览无余。</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
       <View className="flex-row items-center justify-between mb-3 px-1">
         <Text className="text-[13px] font-semibold text-muted-foreground uppercase tracking-widest">实时热搜榜</Text>
         {lastUpdated ? (

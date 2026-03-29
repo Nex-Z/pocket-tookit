@@ -4,9 +4,10 @@ import { DEFAULT_RECENT_TOOL_IDS, TOOL_MAP, ToolId, ToolMeta } from '@/lib/tool-
 
 const USAGE_LOG_KEY = '@pocket-toolkit/usage-log';
 const POMODORO_STATE_KEY = '@pocket-toolkit/pomodoro-state';
+const PINNED_TOOL_IDS_KEY = '@pocket-toolkit/pinned-tool-ids';
 const MAX_USAGE_LOG_COUNT = 100;
 
-const APP_DATA_KEYS = [USAGE_LOG_KEY, POMODORO_STATE_KEY] as const;
+const APP_DATA_KEYS = [USAGE_LOG_KEY, POMODORO_STATE_KEY, PINNED_TOOL_IDS_KEY] as const;
 const memoryFallbackStorage = new Map<string, string>();
 
 type UsageChangeListener = () => void;
@@ -20,6 +21,11 @@ export type UsageLogEntry = {
 
 export type ToolSummary = ToolMeta & {
   lastOpenedAt?: string;
+  isPinned?: boolean;
+};
+
+export type ToolUsageSummary = ToolSummary & {
+  useCount: number;
 };
 
 export type UsageStats = {
@@ -103,6 +109,28 @@ function parseUsageLog(raw: string | null): UsageLogEntry[] {
   }
 }
 
+function parseToolIdList(raw: string | null): ToolId[] {
+  if (!raw) return [];
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+
+    const seen = new Set<ToolId>();
+    const result: ToolId[] = [];
+    for (const item of parsed) {
+      const toolId = String(item || '');
+      if (!isValidToolId(toolId)) continue;
+      if (seen.has(toolId)) continue;
+      seen.add(toolId);
+      result.push(toolId);
+    }
+    return result;
+  } catch {
+    return [];
+  }
+}
+
 async function readUsageLog(): Promise<UsageLogEntry[]> {
   const raw = await safeStorageGetItem(USAGE_LOG_KEY);
   return parseUsageLog(raw);
@@ -110,6 +138,15 @@ async function readUsageLog(): Promise<UsageLogEntry[]> {
 
 async function writeUsageLog(entries: UsageLogEntry[]) {
   await safeStorageSetItem(USAGE_LOG_KEY, JSON.stringify(entries));
+}
+
+async function readPinnedToolIds(): Promise<ToolId[]> {
+  const raw = await safeStorageGetItem(PINNED_TOOL_IDS_KEY);
+  return parseToolIdList(raw);
+}
+
+async function writePinnedToolIds(toolIds: ToolId[]) {
+  await safeStorageSetItem(PINNED_TOOL_IDS_KEY, JSON.stringify(toolIds));
 }
 
 export function subscribeUsageChanges(listener: UsageChangeListener) {
@@ -154,6 +191,31 @@ export async function getRecentTools(limit: number): Promise<ToolSummary[]> {
   return result;
 }
 
+export async function getPinnedTools(limit?: number): Promise<ToolSummary[]> {
+  const pinnedToolIds = await readPinnedToolIds();
+  const result: ToolSummary[] = [];
+  const maxCount = typeof limit === 'number' ? Math.max(0, limit) : Number.POSITIVE_INFINITY;
+
+  for (const toolId of pinnedToolIds) {
+    result.push({
+      ...TOOL_MAP[toolId],
+      isPinned: true,
+    });
+    if (result.length >= maxCount) break;
+  }
+
+  return result;
+}
+
+export async function togglePinnedTool(toolId: ToolId): Promise<void> {
+  const current = await readPinnedToolIds();
+  const exists = current.includes(toolId);
+  const next = exists ? current.filter((id) => id !== toolId) : [toolId, ...current];
+
+  await writePinnedToolIds(next);
+  notifyUsageChanged();
+}
+
 export async function getUsageStats(range: 'week' | 'all' = 'all'): Promise<UsageStats> {
   const log = await readUsageLog();
   const weeklyStart = Date.now() - 7 * 24 * 60 * 60 * 1000;
@@ -181,6 +243,36 @@ export async function getUsageStats(range: 'week' | 'all' = 'all'): Promise<Usag
     topToolId,
     lastOpenedAt: log[0]?.openedAt,
   };
+}
+
+export async function getMostUsedTools(limit: number, recentDays = 7): Promise<ToolUsageSummary[]> {
+  if (limit <= 0) return [];
+
+  const log = await readUsageLog();
+  const rangeStart = Date.now() - recentDays * 24 * 60 * 60 * 1000;
+  const frequency = new Map<ToolId, number>();
+  const latestOpenTime = new Map<ToolId, string>();
+
+  for (const entry of log) {
+    const openedTs = new Date(entry.openedAt).getTime();
+    if (openedTs < rangeStart) continue;
+
+    frequency.set(entry.toolId, (frequency.get(entry.toolId) || 0) + 1);
+    if (!latestOpenTime.has(entry.toolId)) {
+      latestOpenTime.set(entry.toolId, entry.openedAt);
+    }
+  }
+
+  const rankedToolIds = [...frequency.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([toolId]) => toolId);
+
+  return rankedToolIds.map((toolId) => ({
+    ...TOOL_MAP[toolId],
+    useCount: frequency.get(toolId) || 0,
+    lastOpenedAt: latestOpenTime.get(toolId),
+  }));
 }
 
 export async function clearAppData(): Promise<void> {

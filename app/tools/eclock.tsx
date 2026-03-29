@@ -1,7 +1,6 @@
 import { ScrollView, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useNavigation } from 'expo-router';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
@@ -84,37 +83,8 @@ export default function EclockScreen() {
     <ScrollView 
       className="flex-1 bg-background"
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 96 }}
     >
-      {/* 顶部横幅 */}
-      <View 
-        className="rounded-[16px] overflow-hidden mb-6"
-        style={{
-          shadowColor: '#137fec',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.2,
-          shadowRadius: 16,
-          elevation: 8,
-        }}
-      >
-        <View className="p-6" style={{ backgroundColor: '#137fec' }}>
-          <View className="absolute top-[-40px] right-[-20px] w-[130px] h-[130px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.08)' }} />
-          <View className="absolute bottom-[-30px] left-[20%] w-[100px] h-[100px] rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.06)' }} />
-          
-          <View className="relative z-10 flex-row items-center gap-4">
-            <View className="w-14 h-14 rounded-[12px] bg-white/20 items-center justify-center">
-              <Icon as={Clock} className="text-white" size={28} strokeWidth={2} />
-            </View>
-            <View className="flex-1">
-              <Text className="text-white font-bold text-[22px] mb-1">鹅打卡</Text>
-              <Text className="text-white/80 text-[13px] leading-relaxed">
-                输入您的 Token 以进行快速打卡操作，记录您的工作时间。
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-
       <View className="gap-5">
         <Text className="text-[13px] font-semibold text-muted-foreground uppercase tracking-widest pl-1">
           操作面板

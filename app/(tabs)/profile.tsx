@@ -3,6 +3,7 @@ import { ScrollView, View, Pressable, StyleSheet, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Moon, Sun, Monitor, Trash2, Info, BarChart3, User, ChevronRight, Shield } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
@@ -35,6 +36,7 @@ const DEFAULT_STATS: UsageStats = {
 export default function ProfileScreen() {
   const { colorScheme, setColorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const insets = useSafeAreaInsets();
   const [activeTheme, setActiveTheme] = React.useState<ThemeOption>((colorScheme as ThemeOption) || 'system');
   const [stats, setStats] = React.useState<UsageStats>(DEFAULT_STATS);
 
@@ -160,7 +162,7 @@ export default function ProfileScreen() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 100 }}
     >
-      <View className="px-5 pt-16 pb-1">
+      <View className="px-5 pb-1" style={{ paddingTop: insets.top + 12 }}>
         <Text className="text-[32px] font-bold text-foreground tracking-tight leading-10">我的</Text>
       </View>
 
