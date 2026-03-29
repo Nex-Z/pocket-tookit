@@ -5,6 +5,7 @@ import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
 import { Zap, TrendingUp, Flame, RefreshCw, Clock, Search, ExternalLink } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { recordToolOpen } from '@/lib/usage';
 
 interface ParsedHotItem {
   rank: number;
@@ -324,6 +325,10 @@ export default function NewsScreen() {
   const navigation = useNavigation();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  useEffect(() => {
+    recordToolOpen('news').catch(() => {});
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({

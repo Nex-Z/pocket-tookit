@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
 import { Database, LogIn, LogOut, KeyRound, CheckCircle2, XCircle } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { recordToolOpen } from '@/lib/usage';
 
 export default function DmpScreen() {
   const navigation = useNavigation();
@@ -19,6 +20,10 @@ export default function DmpScreen() {
   const [history, setHistory] = useState<{time: string, result: string, success: boolean, type: 'in'|'out'}[]>([]);
 
   useEffect(() => {
+    recordToolOpen('dmp').catch(() => {});
+  }, []);
+
+  useEffect(() => {
     navigation.setOptions({
       title: 'DMP打卡',
       headerStyle: {
@@ -29,7 +34,17 @@ export default function DmpScreen() {
     });
   }, [navigation, isDark]);
 
-  const fetchDmpClock = async (token: string, type: 'in' | 'out') => {
+  type ClockSuccessResult = {
+    success: true;
+    data: { message: string; timestamp: string };
+  };
+
+  type ClockFailedResult = {
+    success: false;
+    error: string;
+  };
+
+  const fetchDmpClock = async (token: string, type: 'in' | 'out'): Promise<ClockSuccessResult | ClockFailedResult> => {
     await new Promise(resolve => setTimeout(resolve, 800));
     const isSuccess = Math.random() > 0.2;
     if (isSuccess) {
@@ -51,14 +66,14 @@ export default function DmpScreen() {
     setLoadingType(type);
     setResult('');
 
-    const { success, data, error } = await fetchDmpClock(token, type);
+    const result = await fetchDmpClock(token, type);
 
-    if (success) {
-      const newResult = `${data.message}\n时间: ${new Date(data.timestamp).toLocaleTimeString()}`;
+    if (result.success) {
+      const newResult = `${result.data.message}\n时间: ${new Date(result.data.timestamp).toLocaleTimeString()}`;
       setResult(newResult);
       setHistory(prev => [{ time: new Date().toLocaleTimeString(), result: '打卡成功', success: true, type }, ...prev.slice(0, 4)]);
     } else {
-      const errorMsg = error || '未知错误';
+      const errorMsg = result.error || '未知错误';
       setResult(errorMsg);
       setHistory(prev => [{ time: new Date().toLocaleTimeString(), result: errorMsg, success: false, type }, ...prev.slice(0, 4)]);
     }

@@ -8,6 +8,7 @@ import { Text } from '@/components/ui/text';
 import { Icon } from '@/components/ui/icon';
 import { Clock, Terminal, CheckCircle2, XCircle, Send } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
+import { recordToolOpen } from '@/lib/usage';
 
 export default function EclockScreen() {
   const [token, setToken] = useState('');
@@ -38,6 +39,10 @@ export default function EclockScreen() {
       return { success: false, error: error?.message || '未知错误' };
     }
   };
+
+  useEffect(() => {
+    recordToolOpen('eclock').catch(() => {});
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({
