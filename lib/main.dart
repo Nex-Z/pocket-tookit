@@ -146,7 +146,7 @@ class _ClockInPageState extends State<ClockInPage> {
     final normalizedUrl = serverUrl.endsWith('/')
         ? serverUrl.substring(0, serverUrl.length - 1)
         : serverUrl;
-    return '$normalizedUrl/api/v1/clockIn';
+    return '$normalizedUrl/api/v1/dmp/sign';
   }
 
   @override
