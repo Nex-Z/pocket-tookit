@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,6 +88,7 @@ class _ClockInPageState extends State<ClockInPage> {
   Future<void> _clockIn() async {
     final serverUrl = _serverController.text.trim();
     final token = _tokenController.text.trim();
+    final requestUrl = _buildClockInUrl(serverUrl);
 
     if (serverUrl.isEmpty || token.isEmpty) {
       setState(() {
@@ -103,10 +106,13 @@ class _ClockInPageState extends State<ClockInPage> {
 
     await _saveServerUrl(serverUrl);
 
+    final requestTime = DateTime.now();
+    final stopwatch = Stopwatch()..start();
+
     try {
       // 后端同时接收 clock_in 和 type，用于区分上班卡、下班卡。
       final response = await _dio.post<dynamic>(
-        _buildClockInUrl(serverUrl),
+        requestUrl,
         data: {
           'token': token,
           'clock_in': _isClockIn,
@@ -114,23 +120,49 @@ class _ClockInPageState extends State<ClockInPage> {
         },
         options: Options(validateStatus: (_) => true),
       );
+      stopwatch.stop();
       final statusCode = response.statusCode;
       final success =
           statusCode != null && statusCode >= 200 && statusCode < 300;
 
       setState(() {
         _isSuccess = success;
-        _resultText = 'HTTP ${statusCode ?? '-'}\n${response.data}';
+        _resultText = _formatResult(
+          requestUrl: requestUrl,
+          requestTime: requestTime,
+          elapsed: stopwatch.elapsed,
+          statusCode: statusCode,
+          statusMessage: response.statusMessage,
+          body: response.data,
+        );
       });
     } on DioException catch (error) {
+      stopwatch.stop();
       setState(() {
         _isSuccess = false;
-        _resultText = error.message ?? '网络请求失败';
+        _resultText = _formatResult(
+          requestUrl: requestUrl,
+          requestTime: requestTime,
+          elapsed: stopwatch.elapsed,
+          statusCode: error.response?.statusCode,
+          statusMessage: error.response?.statusMessage,
+          body: error.response?.data,
+          errorMessage: error.message ?? '网络请求失败',
+        );
       });
     } catch (error) {
+      stopwatch.stop();
       setState(() {
         _isSuccess = false;
-        _resultText = error.toString();
+        _resultText = _formatResult(
+          requestUrl: requestUrl,
+          requestTime: requestTime,
+          elapsed: stopwatch.elapsed,
+          statusCode: null,
+          statusMessage: null,
+          body: null,
+          errorMessage: error.toString(),
+        );
       });
     } finally {
       if (mounted) {
@@ -147,6 +179,63 @@ class _ClockInPageState extends State<ClockInPage> {
         ? serverUrl.substring(0, serverUrl.length - 1)
         : serverUrl;
     return '$normalizedUrl/api/v1/dmp/sign';
+  }
+
+  String _formatResult({
+    required String requestUrl,
+    required DateTime requestTime,
+    required Duration elapsed,
+    required int? statusCode,
+    required String? statusMessage,
+    required dynamic body,
+    String? errorMessage,
+  }) {
+    // 用固定字段输出完整结果，便于复制给后端排查。
+    final buffer = StringBuffer()
+      ..writeln('状态码：${statusCode ?? '-'}')
+      ..writeln('状态信息：${statusMessage ?? '-'}')
+      ..writeln('请求时间：${_formatDateTime(requestTime)}')
+      ..writeln('耗时：${elapsed.inMilliseconds} ms')
+      ..writeln('请求地址：$requestUrl');
+
+    if (errorMessage != null && errorMessage.isNotEmpty) {
+      buffer.writeln('错误信息：$errorMessage');
+    }
+
+    buffer
+      ..writeln()
+      ..writeln('响应体：')
+      ..write(_formatBody(body));
+
+    return buffer.toString();
+  }
+
+  String _formatBody(dynamic body) {
+    if (body == null) {
+      return '-';
+    }
+    if (body is String) {
+      return body.isEmpty ? '-' : body;
+    }
+    try {
+      return const JsonEncoder.withIndent('  ').convert(body);
+    } catch (_) {
+      return body.toString();
+    }
+  }
+
+  String _formatDateTime(DateTime value) {
+    final local = value.toLocal();
+    String twoDigits(int number) => number.toString().padLeft(2, '0');
+    String threeDigits(int number) => number.toString().padLeft(3, '0');
+
+    return '${local.year}-'
+        '${twoDigits(local.month)}-'
+        '${twoDigits(local.day)} '
+        '${twoDigits(local.hour)}:'
+        '${twoDigits(local.minute)}:'
+        '${twoDigits(local.second)}.'
+        '${threeDigits(local.millisecond)}';
   }
 
   @override
@@ -234,9 +323,12 @@ class _ClockInPageState extends State<ClockInPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12),
-                child: SelectableText(
-                  _resultText,
-                  style: TextStyle(color: resultColor),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 180),
+                  child: SelectableText(
+                    _resultText,
+                    style: TextStyle(color: resultColor, height: 1.45),
+                  ),
                 ),
               ),
             ),
